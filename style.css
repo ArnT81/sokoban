@@ -1,0 +1,28 @@
+.tile{
+	width: 36px;
+	height: 36px;
+}
+
+.tile-wall {
+	background: rgb(32, 32, 32);
+}
+
+.tile-space {
+	background: rgb(97, 97, 97);
+}
+
+.tile-goal {
+	background: yellow;
+}
+
+.entity-player {
+	background: blue;
+}
+
+.entity-block {
+	background: rgb(116, 31, 31);
+}
+
+.entity-block-goal {
+	background: green;
+}
