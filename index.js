@@ -1,14 +1,15 @@
 //GLOBAL VARIABLES
+let player;
 const tileSize = 36;
-let player
 const classes = {
 	' ': 'tile tile-space',
 	'W': 'tile tile-wall',
 	'G': 'tile tile-goal',
 	'B': 'tile entity-block',
 	'P': 'tile entity-player',
-}
+};
 
+//FUNCTIONS
 const setupBoard = ({ mapGrid, width, height }) => {
 	for (let y = 0; y < height; y++) {
 		for (let x = 0; x < width; x++) {
@@ -23,73 +24,50 @@ const setupBoard = ({ mapGrid, width, height }) => {
 	}
 }
 
-
-
-
-
 const updatePlayerPosition = (newPlayerId) => {
+	let playerNode = document.getElementById(newPlayerId)
+	let targetNodeClass = playerNode.classList[1]
+
+	if (targetNodeClass == 'tile-wall') return;
+	if (targetNodeClass == 'tile-goal') targetNodeClass = 'tile-space'; //"goal" (orange dots)
+
+	if (targetNodeClass == 'entity-block') { //move the block
+		console.log('newPlayerId', newPlayerId);
+		console.log('player', player);
+		
 
 
+	}
 
-	console.log(newPlayerId);
-
-	let targetNode = document.getElementById(newPlayerId)
-	let targetNodeClass = targetNode.classList[1]
 
 	$('.entity-player').toggleClass(`entity-player ${targetNodeClass}`)
-	$(targetNode).toggleClass(`${targetNodeClass} entity-player`)
+	$(playerNode).toggleClass(`${targetNodeClass} entity-player`)
 
-	player = $('.entity-player').attr('id')
+
+	// player = $('.entity-player').attr('id')
+	// console.log('targetNodeClass', targetNodeClass);
 	convertPlayerToObject()
 }
 
-const moveLeft = () => {
-	console.log(player);
-	let newPlayerId = `x:${player.x - 1},y:${player.y}`;
-	updatePlayerPosition(newPlayerId)
-}
-
-const moveRight = () => {
-	console.log(player);
-	let newPlayerId = `x:${player.x + 1},y:${player.y}`;
-	updatePlayerPosition(newPlayerId)
-}
-
-const moveUp = () => {
-	console.log(player);
-	let newPlayerId = `x:${player.x},y:${player.y - 1}`;
-	updatePlayerPosition(newPlayerId)
-}
-
-const moveDown = () => {
-	console.log(player);
-	let newPlayerId = `x:${player.x},y:${player.y + 1}`;
-	updatePlayerPosition(newPlayerId)
-}
-
 const playerMovement = ({ key }) => ({
-	'ArrowLeft': () => moveLeft(),
-	'ArrowRight': () => moveRight('right'),
-	'ArrowUp': () => moveUp(),
-	'ArrowDown': () => moveDown(),
+	'ArrowLeft': () => updatePlayerPosition(`x:${player.x - 1},y:${player.y}`),
+	'ArrowRight': () => updatePlayerPosition(`x:${player.x + 1},y:${player.y}`),
+	'ArrowUp': () => updatePlayerPosition(`x:${player.x},y:${player.y - 1}`),
+	'ArrowDown': () => updatePlayerPosition(`x:${player.x},y:${player.y + 1}`),
 })[key]?.() || null;
-
 
 convertPlayerToObject = () => {
 	player = $('.entity-player')
 		.attr('id')
 		.split(',')
 		.reduce((obj, str) => {
-			console.log('HERE', obj);
 			let strParts = str.split(":");
 			obj[strParts[0]] = parseInt(strParts[1]);
 			return obj;
 		}, {});
 }
 
-
-
-
+//DOMCONTENT LOADED
 $(() => {
 	//DEFAULT VALUES
 	$('#board').css({

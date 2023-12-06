@@ -1,26 +1,28 @@
-.tile{
+.tile {
 	width: 36px;
 	height: 36px;
+	background: #383838;
 }
 
 .tile-wall {
-	background: rgb(32, 32, 32);
+	background-image: url("media/wall.gif");
 }
 
 .tile-space {
-	background: rgb(97, 97, 97);
+
+	background: #2a2a2a;
 }
 
 .tile-goal {
-	background: yellow;
+	background-image: url("media/goal.gif");
 }
 
 .entity-player {
-	background: blue;
+	background-image: url("media/player.gif");
 }
 
 .entity-block {
-	background: rgb(116, 31, 31);
+	background-image: url("media/block.gif");
 }
 
 .entity-block-goal {
