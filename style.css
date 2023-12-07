@@ -9,7 +9,6 @@
 }
 
 .tile-space {
-
 	background: #2a2a2a;
 }
 
@@ -26,5 +25,9 @@
 }
 
 .entity-block-goal {
-	background: green;
+	mix-blend-mode: multiply;
+}
+
+#board {
+	background-color: red;
 }

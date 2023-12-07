@@ -1,4 +1,5 @@
 //GLOBAL VARIABLES
+let goal = [];
 let player;
 const tileSize = 36;
 const classes = {
@@ -22,38 +23,49 @@ const setupBoard = ({ mapGrid, width, height }) => {
 			}
 		}
 	}
+	$('.tile-goal').each(function () { goal.push($(this)[0].id) }) //array of goal id´s
 }
 
-const updatePlayerPosition = (newPlayerId) => {
+const updatePlayerPosition = (PlayerPositionPlusTwo, newPlayerPosition) => {
+	newPlayerId = `x:${newPlayerPosition.x},y:${newPlayerPosition.y}`
+	newCrateId = `x:${PlayerPositionPlusTwo.x},y:${PlayerPositionPlusTwo.y}`
+
 	let playerNode = document.getElementById(newPlayerId)
+	let crateNode = document.getElementById(newCrateId)
+
 	let targetNodeClass = playerNode.classList[1]
+	let targetNodePlusOne = crateNode.classList[1]
 
 	if (targetNodeClass == 'tile-wall') return;
 	if (targetNodeClass == 'tile-goal') targetNodeClass = 'tile-space'; //"goal" (orange dots)
-
 	if (targetNodeClass == 'entity-block') { //move the block
-		console.log('newPlayerId', newPlayerId);
-		console.log('player', player);
-		
-
-
+		if (targetNodePlusOne == 'tile-wall' || targetNodePlusOne == 'entity-block') return;
+		$('.entity-player').toggleClass(`entity-player tile-space`)
+		$(playerNode).toggleClass(`${targetNodeClass} entity-player`)
+		$(crateNode).toggleClass(`${targetNodePlusOne} entity-block`)
+	}
+	else {
+		$('.entity-player').toggleClass(`entity-player ${targetNodeClass}`)
+		$(playerNode).toggleClass(`${targetNodeClass} entity-player`)
 	}
 
+	goal.forEach(id => { //ensure goal is either orange dot or crate
+		const node = document.getElementById(id)
 
-	$('.entity-player').toggleClass(`entity-player ${targetNodeClass}`)
-	$(playerNode).toggleClass(`${targetNodeClass} entity-player`)
+		if (node.classList.contains('entity-block')) $(node).addClass('entity-block-goal')
+		else $(node).removeClass('entity-block-goal');
 
+		$(node).addClass('tile-goal')
+	})
 
-	// player = $('.entity-player').attr('id')
-	// console.log('targetNodeClass', targetNodeClass);
 	convertPlayerToObject()
 }
 
 const playerMovement = ({ key }) => ({
-	'ArrowLeft': () => updatePlayerPosition(`x:${player.x - 1},y:${player.y}`),
-	'ArrowRight': () => updatePlayerPosition(`x:${player.x + 1},y:${player.y}`),
-	'ArrowUp': () => updatePlayerPosition(`x:${player.x},y:${player.y - 1}`),
-	'ArrowDown': () => updatePlayerPosition(`x:${player.x},y:${player.y + 1}`),
+	'ArrowLeft': () => updatePlayerPosition({ x: player.x - 2, y: player.y }, { x: player.x - 1, y: player.y }),
+	'ArrowRight': () => updatePlayerPosition({ x: player.x + 2, y: player.y }, { x: player.x + 1, y: player.y }),
+	'ArrowUp': () => updatePlayerPosition({ x: player.x, y: player.y - 2 }, { x: player.x, y: player.y - 1 }),
+	'ArrowDown': () => updatePlayerPosition({ x: player.x, y: player.y + 2 }, { x: player.x, y: player.y + 1 }),
 })[key]?.() || null;
 
 convertPlayerToObject = () => {
